@@ -47,6 +47,7 @@ class GameEngine:
         
         # Création de la tour
         self.tower = Tower(tower_position, range=5, damage=1, fire_rate=1.0)
+        self.tower.hp = self.game_state['tower_hp']  # Synchroniser HP avec game_state
         self.towers: List[Tower] = [self.tower]
         
         # Système de combat
@@ -85,7 +86,12 @@ class GameEngine:
             
             # Traiter les entrées
             event = self.ui.check_for_event()
-            self._handle_input(event)
+            
+            # Mettre à jour la currentTab de l'UI basé sur le gameState
+            self.ui.current_tab = self.game_state['current_tab']
+            
+            if event:
+                self._handle_input(event)
             
             # Mettre à jour l'état du jeu
             if not self.game_state['game_over']:
@@ -93,6 +99,9 @@ class GameEngine:
             
             # Afficher l'état du jeu
             self._render()
+            
+            # Synchroniser l'état de la tour avec game_state
+            self.tower.hp = self.game_state['tower_hp']
             
             # Vérifier si la partie est terminée
             if self.game_state['tower_hp'] <= 0:
@@ -114,7 +123,6 @@ class GameEngine:
         # Changement d'onglet
         if action.get('change_tab'):
             self.game_state['current_tab'] = action['change_tab']
-            self.ui.current_tab = action['change_tab']
         
         # Déplacement de la tour
         if action.get('move') and self.tower:

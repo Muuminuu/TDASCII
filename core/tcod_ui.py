@@ -1,6 +1,4 @@
 import tcod
-from tcod import libtcodpy
-from tcod.console import Console
 from typing import List, Dict, Any, Tuple
 from entities.tower import Tower
 from entities.enemy import Enemy
@@ -48,7 +46,7 @@ class TcodUI:
     def initialize(self):
         """Initialise l'interface TCOD"""
         # Utiliser l'approche moderne de tcod
-        self.console = Console(self.screen_width, self.screen_height)
+        self.console = tcod.Console(self.screen_width, self.screen_height)
         self.context = tcod.context.new_terminal(
             self.screen_width, 
             self.screen_height,
@@ -246,15 +244,17 @@ class TcodUI:
     
     def wait_for_keypress(self) -> Dict:
         """Attend une touche et retourne l'événement"""
-        event = tcod.event.wait()
-        return self._convert_event(event)
+        for event in tcod.event.wait():
+            if isinstance(event, tcod.event.KeyDown):
+                return self._convert_event(event)
+        return {}
     
     def check_for_event(self) -> Dict:
         """Vérifie si un événement est disponible"""
         for event in tcod.event.get():
-            if isinstance(event, tcod.event.Quit):
+            if event.type == "QUIT" or isinstance(event, tcod.event.Quit):
                 return {'type': 'QUIT'}
-            elif isinstance(event, tcod.event.KeyDown):
+            elif event.type == "KEYDOWN" or isinstance(event, tcod.event.KeyDown):
                 return self._convert_event(event)
         return {}
     
@@ -266,8 +266,8 @@ class TcodUI:
             return {
                 'type': 'KEYDOWN',
                 'key': event.sym,
-                'alt': event.mod & tcod.event.KMOD_ALT,
-                'ctrl': event.mod & tcod.event.KMOD_CTRL,
-                'shift': event.mod & tcod.event.KMOD_SHIFT
+                'alt': bool(event.mod & tcod.event.KMOD_ALT),
+                'ctrl': bool(event.mod & tcod.event.KMOD_CTRL),
+                'shift': bool(event.mod & tcod.event.KMOD_SHIFT)
             }
         return {}
