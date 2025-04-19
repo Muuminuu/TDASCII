@@ -1,4 +1,5 @@
 import tcod
+from tcod import event
 from typing import Dict, Any, Optional
 from models.position import Position
 
@@ -34,13 +35,13 @@ class TcodInputHandler:
             action['change_tab'] = 'defense'
             
         # Déplacement
-        elif key == tcod.event.K_LEFT:
+        elif key == event.K_LEFT:
             action['move'] = (-1, 0)
-        elif key == tcod.event.K_RIGHT:
+        elif key == event.K_RIGHT:
             action['move'] = (1, 0)
-        elif key == tcod.event.K_UP:
+        elif key == event.K_UP:
             action['move'] = (0, -1)
-        elif key == tcod.event.K_DOWN:
+        elif key == event.K_DOWN:
             action['move'] = (0, 1)
             
         # Actions spécifiques à l'onglet
@@ -67,7 +68,7 @@ class TcodInputHandler:
                 action['cost'] = 20
                 
         # Déclencher manuellement la prochaine vague
-        if key == tcod.event.K_SPACE:
+        if key == event.K_SPACE:
             action['next_wave'] = True
             
         return action
