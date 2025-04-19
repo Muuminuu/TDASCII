@@ -44,10 +44,9 @@ class TcodUI:
         
     def initialize(self):
         """Initialise l'interface TCOD"""
-        tcod.console_set_custom_font('terminal.png', 
-                                    tcod.FONT_TYPE_GREYSCALE | tcod.FONT_LAYOUT_ASCII_INROW)
+        # Remplacer la ligne problématique par l'initialisation simple
         self.console = tcod.console_init_root(self.screen_width, self.screen_height, 
-                                             'Tower Defense ASCII - POO', False)
+                                            'Tower Defense ASCII - POO', False)
     
     def clear(self):
         """Efface l'écran"""
@@ -257,11 +256,12 @@ class TcodUI:
     
     def check_for_event(self) -> Dict:
         """Vérifie si un événement est disponible"""
-        event = tcod.event.poll()
-        if event.type == "QUIT":
-            return {'type': 'QUIT'}
-        elif event.type == "KEYDOWN":
-            return self._convert_event(event)
+        # Utiliser get() au lieu de poll()
+        for event in tcod.event.get():
+            if event.type == "QUIT":
+                return {'type': 'QUIT'}
+            elif event.type == "KEYDOWN":
+                return self._convert_event(event)
         return {}
     
     def _convert_event(self, event) -> Dict:
