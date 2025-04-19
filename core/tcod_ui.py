@@ -165,22 +165,25 @@ class TcodUI:
         self.console.print(self.dashboard_x + 2, self.dashboard_y + 7, 
                          f"[1] Dégâts (+1): Coût {10}", fg=(200, 200, 200))
         
+        damage_display = str(tower.damage) if tower else "1"
         self.console.print(self.dashboard_x + 2, self.dashboard_y + 8, 
-                         f"    Actuel: {tower.damage if tower else 1}", fg=(150, 150, 150))
+                         f"    Actuel: {damage_display}", fg=(150, 150, 150))
         
         # Portée
         self.console.print(self.dashboard_x + 2, self.dashboard_y + 10, 
                          f"[2] Portée (+1): Coût {15}", fg=(200, 200, 200))
         
+        range_display = str(tower.range) if tower else "3"
         self.console.print(self.dashboard_x + 2, self.dashboard_y + 11, 
-                         f"    Actuelle: {tower.range if tower else 3}", fg=(150, 150, 150))
+                         f"    Actuelle: {range_display}", fg=(150, 150, 150))
         
         # Vitesse de tir
         self.console.print(self.dashboard_x + 2, self.dashboard_y + 13, 
                          f"[S] Vitesse Tir (+0.2): Coût {25}", fg=(200, 200, 200))
         
+        fire_rate_display = f"{tower.fire_rate:.1f}" if tower else "1.0"
         self.console.print(self.dashboard_x + 2, self.dashboard_y + 14, 
-                         f"    Actuelle: {tower.fire_rate:.1f if tower else 1.0}", fg=(150, 150, 150))
+                         f"    Actuelle: {fire_rate_display}", fg=(150, 150, 150))
     
     def _draw_defense_tab(self, game_state: Dict[str, Any], tower: Tower):
         """Dessine l'onglet d'amélioration de la défense"""
@@ -192,11 +195,12 @@ class TcodUI:
                          f"[3] Vie de la Tour (+5): Coût {20}", fg=(200, 200, 200))
         
         if tower:
-            self.console.print(self.dashboard_x + 2, self.dashboard_y + 8, 
-                             f"    Actuelle: {tower.hp}/{game_state.get('max_tower_hp', 10)}", fg=(150, 150, 150))
+            hp_display = f"{tower.hp}/{game_state.get('max_tower_hp', 10)}"
         else:
-            self.console.print(self.dashboard_x + 2, self.dashboard_y + 8, 
-                             f"    Actuelle: 0/0", fg=(150, 150, 150))
+            hp_display = "0/0"
+            
+        self.console.print(self.dashboard_x + 2, self.dashboard_y + 8, 
+                         f"    Actuelle: {hp_display}", fg=(150, 150, 150))
     
     def _draw_hud(self, game_state: Dict[str, Any]):
         """Dessine le HUD (barre de vie, etc.)"""
